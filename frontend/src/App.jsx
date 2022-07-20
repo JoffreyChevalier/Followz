@@ -1,5 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 
+import UserContextProvider from "@contexts/UserContextProvider";
+import ProtectedRoute from "@components/ProtectedRoute";
+
 import LoginPage from "@pages/LoginPage";
 import SubscriptionPage from "@pages/SubscriptionPage";
 import ApplicationsPage from "@pages/ApplicationsPage";
@@ -10,15 +13,38 @@ import "./App.css";
 
 function App() {
   return (
-    <div>
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="inscription" element={<SubscriptionPage />} />
-        <Route path="candidatures" element={<ApplicationsPage />} />
-        <Route path="archives" element={<ArchivesPage />} />
-        <Route path="profil" element={<ProfilePage />} />
-      </Routes>
-    </div>
+    <UserContextProvider>
+      <div>
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="inscription" element={<SubscriptionPage />} />
+          <Route
+            path="candidatures"
+            element={
+              <ProtectedRoute>
+                <ApplicationsPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="archives"
+            element={
+              <ProtectedRoute>
+                <ArchivesPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="profil"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </div>
+    </UserContextProvider>
   );
 }
 
