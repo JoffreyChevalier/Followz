@@ -5,13 +5,14 @@ import { useForm } from "react-hook-form";
 import { UserContext } from "@contexts/UserContextProvider";
 import { login } from "@services/api";
 
-import { Input, Button } from "@material-tailwind/react";
+import { Input, Button, Alert } from "@material-tailwind/react";
 
 import logo from "@assets/logo.png";
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [error, setError] = useState();
+  const [show, setShow] = useState(true);
   const { setUser } = useContext(UserContext);
 
   const { register, handleSubmit, reset } = useForm();
@@ -22,6 +23,7 @@ export default function LoginForm() {
       navigate("/candidatures");
     } catch (err) {
       setError("Identifiants incorrects");
+      setShow(true);
       reset();
     }
   };
@@ -31,7 +33,7 @@ export default function LoginForm() {
       <div className="max-w-md mx-auto">
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="p-8 mt-0 mb-0 space-y-10 rounded-lg shadow-lg"
+          className="p-8 mt-0 mb-0 space-y-10 rounded-lg shadow-lg  bg-white"
         >
           <img src={logo} alt="Followz logo" />
 
@@ -42,9 +44,15 @@ export default function LoginForm() {
 
           <div className="flex flex-col items-center space-y-6">
             {error && (
-              <p className="uppercase text-center text-red-600 text-xl sm:text-2xl">
+              <Alert
+                show={show}
+                dismissible={{
+                  onClose: () => setShow(false),
+                }}
+                color="red"
+              >
                 {error}
-              </p>
+              </Alert>
             )}
             {/* eslint-disable-next-line */}
             <Input type="text" label="Pseudonyme" {...register("nickname")} />
