@@ -56,11 +56,19 @@ app.get("/users", async (req, res) => {
 });
 
 app.post("/users", async (req, res) => {
-  res.send(
-    await prisma.User.create({
-      data: { ...req.body, password: await argon2.hash(req.body.password) },
-    })
-  );
+  const user = await prisma.User.findUnique({
+    where: { nickname: req.body.nickname },
+  });
+
+  if (!user) {
+    res.send(
+      await prisma.User.create({
+        data: { ...req.body, password: await argon2.hash(req.body.password) },
+      })
+    );
+  } else {
+    res.sendStatus(401);
+  }
 });
 
 // eslint-disable-next-line

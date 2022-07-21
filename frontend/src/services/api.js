@@ -15,3 +15,7 @@ export const fetchMe = async (data) => {
     return null;
   }
 };
+
+export const createUser = async (data) => {
+  return (await axios.post(`${API_URL}/users`, data)).data;
+};
