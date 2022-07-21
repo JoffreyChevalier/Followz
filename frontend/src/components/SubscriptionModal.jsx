@@ -9,17 +9,12 @@ import {
 } from "@material-tailwind/react";
 
 // eslint-disable-next-line
-function SubscriptionModal({ onClick, open, handler, buttonType }) {
+function SubscriptionModal({ open, handler, buttonType }) {
   const navigate = useNavigate();
 
   return (
     <>
-      <Button
-        type={buttonType}
-        onClick={onClick}
-        size="md"
-        className="bg-primary mt-6"
-      >
+      <Button type={buttonType} size="md" className="bg-primary mt-6">
         M'inscrire
       </Button>
       <Dialog

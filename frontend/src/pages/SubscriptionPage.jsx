@@ -1,21 +1,39 @@
-import { Input } from "@material-tailwind/react";
+import { Input, Alert } from "@material-tailwind/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+
+import { createUser } from "@services/api";
 
 import logo from "@assets/logo.png";
 import SubscriptionModal from "@components/SubscriptionModal";
 
 function SubscriptionPage() {
-  // eslint-disable-next-line
-  const [subscriptionIsValid, setSubscriptionIsValid] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const { register, handleSubmit } = useForm();
+  const [error, setError] = useState();
+  const [show, setShow] = useState(true);
+
+  const { register, handleSubmit, reset } = useForm();
 
   const handleOpen = () => setOpen(!open);
 
-  const onSubmit = () => {
-    setSubscriptionIsValid(true);
+  const onSubmit = async (formData) => {
+    const { passwordCheck, ...keepedData } = formData;
+
+    try {
+      if (formData.password === formData.passwordCheck) {
+        await createUser(keepedData);
+        handleOpen();
+      } else {
+        setError("Mot de passe different");
+        setShow(true);
+        reset();
+      }
+    } catch {
+      setError("Pseudonyme deja existant");
+      setShow(true);
+      reset();
+    }
   };
   return (
     <div className="flex justify-center items-center min-h-screen">
@@ -40,27 +58,45 @@ function SubscriptionPage() {
             <div className="flex flex-col items-center justify-center">
               <form
                 onSubmit={handleSubmit(onSubmit)}
-                className="flex flex-col items-center  p-6"
+                className="flex flex-col items-center w-30 p-6"
               >
                 <div className="space-y-6">
+                  {error && (
+                    <Alert
+                      show={show}
+                      dismissible={{
+                        onClose: () => setShow(false),
+                      }}
+                      color="red"
+                    >
+                      {error}
+                    </Alert>
+                  )}
                   <Input
                     type="text"
+                    required
+                    pattern="[A-z0-9]+"
+                    title="Ponctuations et caractères spéciaux interdits"
                     label="Votre pseudonyme"
                     // eslint-disable-next-line
                     {...register("nickname")}
                   />
                   <Input
                     type="password"
-                    label=" Votre mot de passe"
+                    required
+                    label="Votre mot de passe"
                     // eslint-disable-next-line
                     {...register("password")}
                   />
+                  <Input
+                    type="password"
+                    required
+                    label="Confirmez le mot de passe"
+                    // eslint-disable-next-line
+                    {...register("passwordCheck")}
+                  />
                 </div>
-                <SubscriptionModal
-                  buttonType="submit"
-                  onClick={handleOpen}
-                  open={open}
-                />
+                <SubscriptionModal buttonType="submit" open={open} />
               </form>
             </div>
           </div>
