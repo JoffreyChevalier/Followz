@@ -14,7 +14,7 @@ import "./App.css";
 function App() {
   return (
     <UserContextProvider>
-      <div>
+      <div className="bg-primary/10">
         <Routes>
           <Route path="/" element={<LoginPage />} />
           <Route path="inscription" element={<SubscriptionPage />} />
