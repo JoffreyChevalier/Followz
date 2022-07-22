@@ -1,7 +1,13 @@
+import Navbar from "@components/Navbar";
+
+import { useLocation } from "react-router-dom";
+
 function ApplicationsPage() {
+  // eslint-disable-next-line
+  const { pathname, ...others } = useLocation();
   return (
     <div>
-      <p>Candidatures en cours</p>
+      <Navbar path={pathname} />
     </div>
   );
 }
