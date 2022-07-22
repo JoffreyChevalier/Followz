@@ -1,7 +1,13 @@
+import Navbar from "@components/Navbar";
+
+import { useLocation } from "react-router-dom";
+
 function ArchivesPage() {
+  // eslint-disable-next-line
+  const { pathname, ...others } = useLocation();
   return (
     <div>
-      <p>Archive</p>
+      <Navbar path={pathname} />
     </div>
   );
 }
