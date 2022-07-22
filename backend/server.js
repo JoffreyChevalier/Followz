@@ -37,6 +37,24 @@ app.use(
 app.use(express.json());
 
 // eslint-disable-next-line
+app.post("/login", async (req, res) => {
+  const user = await prisma.User.findUnique({
+    where: { nickname: req.body.nickname },
+  });
+
+  if (!user) {
+    return res.sendStatus(401);
+  }
+
+  if (await argon2.verify(user.password, req.body.password)) {
+    delete user.password;
+    return res.send(user);
+  }
+
+  res.sendStatus(401);
+});
+
+// eslint-disable-next-line
 app.get("/me", async (req, res) => {
   const user = await prisma.User;
 
@@ -71,22 +89,93 @@ app.post("/users", async (req, res) => {
   }
 });
 
+app.get("/applications", async (req, res) => {
+  res.send(
+    await prisma.Applications.findMany({
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        jobTitle: true,
+        company: true,
+        url: true,
+        status: true,
+        archived: true,
+        author: true,
+      },
+    })
+  );
+});
+
+app.get("/applications/:authorId", async (req, res) => {
+  const { authorId } = req.params;
+
+  res.send(
+    await prisma.Applications.findMany({
+      where: { authorId: Number(authorId) },
+      select: {
+        id: true,
+        createdAt: false,
+        updatedAt: false,
+        jobTitle: true,
+        company: true,
+        url: true,
+        status: true,
+        archived: true,
+        author: false,
+      },
+    })
+  );
+});
+
+app.post("/applications/:authorId", async (req, res) => {
+  const { authorId } = req.params;
+
+  res.send(
+    await prisma.Applications.create({
+      data: {
+        ...req.body,
+        authorId: Number(authorId),
+      },
+    })
+  );
+});
+
 // eslint-disable-next-line
-app.post("/login", async (req, res) => {
-  const user = await prisma.User.findUnique({
-    where: { nickname: req.body.nickname },
+app.put("/applications/:authorId", async (req, res) => {
+  const application = await prisma.Applications.findUnique({
+    where: { id: Number(req.body.id) },
   });
 
-  if (!user) {
-    return res.sendStatus(401);
+  if (!application) {
+    return res.sendStatus(404);
   }
 
-  if (await argon2.verify(user.password, req.body.password)) {
-    delete user.password;
-    return res.send(user);
-  }
+  const updatedApplication = {
+    ...application,
+    ...req.body,
+  };
 
-  res.sendStatus(401);
+  updatedApplication.archived = Boolean(updatedApplication.archived);
+  delete application.id;
+
+  res.send(
+    await prisma.Applications.update({
+      where: { id: updatedApplication.id },
+      data: updatedApplication,
+    })
+  );
+});
+
+app.delete(`/applications/:authorId`, async (req, res) => {
+  const { id } = req.body;
+  res.send(
+    await prisma.Applications.delete({
+      where: {
+        id: Number(id),
+      },
+    })
+  );
 });
 
 app.listen(port, () => {
