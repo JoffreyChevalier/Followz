@@ -37,6 +37,17 @@ app.use(
 app.use(express.json());
 
 // eslint-disable-next-line
+app.get("/me", async (req, res) => {
+  const { user } = req.session;
+
+  if (!user) {
+    return res.sendStatus(401);
+  }
+
+  res.send(user);
+});
+
+// eslint-disable-next-line
 app.post("/login", async (req, res) => {
   const user = await prisma.User.findUnique({
     where: { nickname: req.body.nickname },
@@ -48,21 +59,23 @@ app.post("/login", async (req, res) => {
 
   if (await argon2.verify(user.password, req.body.password)) {
     delete user.password;
+    req.session.user = user;
     return res.send(user);
   }
 
   res.sendStatus(401);
 });
 
-// eslint-disable-next-line
-app.get("/me", async (req, res) => {
-  const user = await prisma.User;
-
-  if (!user) {
-    return res.sendStatus(401);
+app.delete("/logout", async (req, res) => {
+  if (req.session) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.status(400).send("Unable to log out");
+      } else {
+        res.send("Logout successful");
+      }
+    });
   }
-
-  res.send(user);
 });
 
 app.get("/users", async (req, res) => {

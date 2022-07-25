@@ -8,6 +8,10 @@ export const login = async (data) => {
   return (await axios.post(`${API_URL}/login`, data)).data;
 };
 
+export const logout = async (data) => {
+  return (await axios.delete(`${API_URL}/logout`, data)).data;
+};
+
 export const fetchMe = async (data) => {
   try {
     return (await axios.get(`${API_URL}/me`, data)).data;
