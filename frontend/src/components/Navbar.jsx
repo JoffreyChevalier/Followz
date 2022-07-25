@@ -1,8 +1,15 @@
-import avatar from "@assets/avatar.png";
+import { useState } from "react";
 import { Link } from "react-router-dom";
+
+import avatar from "@assets/avatar.png";
+import LogoutModal from "./LogoutModal";
 
 // eslint-disable-next-line
 function Navbar({ path }) {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => setOpen(!open);
+
   return (
     <div className="flex flex-col justify-between w-16 h-screen bg-white border-r border-grey-300">
       <div>
@@ -106,28 +113,7 @@ function Navbar({ path }) {
       </div>
 
       <div className="sticky inset-x-0 bottom-0 p-2 bg-white border-t border-grey-300">
-        <form action="/logout">
-          <button
-            type="submit"
-            className="flex justify-center w-full px-2 py-1.5 text-sm text-grey-500 rounded-lg hover:bg-grey-50 hover:text-error group relative"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="20px"
-              viewBox="0 0 24 24"
-              width="20px"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z" />
-            </svg>
-
-            <span className="absolute text-xs font-medium text-white bg-grey-900 left-full ml-4 px-2 py-1.5 top-1/2 -translate-y-1/2 rounded opacity-0 group-hover:opacity-100">
-              Déconnexion
-            </span>
-          </button>
-        </form>
+        <LogoutModal onClick={handleOpen} open={open} handleOpen={handleOpen} />
       </div>
     </div>
   );

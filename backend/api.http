@@ -20,3 +20,50 @@ Content-Type: application/json
     "nickname": "vins",
     "password": "admin"
 }
+
+###
+
+DELETE http://localhost:5000/logout
+Content-Type: application/json
+
+###
+
+GET http://localhost:5000/applications
+Content-Type: application/json
+
+###
+
+GET http://localhost:5000/applications/8
+Content-Type: application/json
+
+###
+
+POST http://localhost:5000/applications/8
+Content-Type: application/json
+
+{
+    "jobTitle": "dev back",
+    "company": "WCS",
+    "url": "https://WCS.fr",
+    "status": "Attente de réponse"
+}
+
+###
+
+PUT http://localhost:5000/applications/8
+Content-Type: application/json
+
+{
+    "id": 4,
+    "status": "pétasse",
+    "archived": true
+}
+
+###
+
+DELETE http://localhost:5000/applications/8
+Content-Type: application/json
+
+{
+    "id": 6
+}
