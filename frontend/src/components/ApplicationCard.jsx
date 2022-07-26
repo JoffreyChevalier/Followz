@@ -6,32 +6,26 @@ import {
   Typography,
 } from "@material-tailwind/react";
 
-function ApplicationCardS() {
+function ApplicationCardS({ imgSrc, title, company, url, status }) {
   return (
-    <Card className="w-96">
-      <CardHeader color="blue" floated="0">
+    <Card className="max-w-xs">
+      <CardHeader floated={false}>
         <img
-          src="/img/blog.jpg"
-          alt="img-blur-shadow"
-          className="h-full w-full"
+          src={imgSrc}
+          alt="logo du site de recherche d'emplois"
+          className="h-16 w-16 rounded-lg"
         />
       </CardHeader>
       <CardBody className="text-center">
         <Typography variant="h5" className="mb-2">
-          Cozy 5 Stars Apartment
+          {title}
         </Typography>
-        <Typography>
-          The place is close to Barceloneta Beach and bus stop just 2 min by
-          walk and near to "Naviglio" where you can enjoy the main night life in
-          Barcelona.
-        </Typography>
+        <Typography>{company}</Typography>
+
+        <Typography>{url}</Typography>
       </CardBody>
       <CardFooter divider className="flex items-center justify-between py-3">
-        <Typography variant="small">$899/night</Typography>
-        <Typography variant="small" color="grey" className="flex gap-1">
-          <i className="fas fa-map-marker-alt fa-sm mt-[3px]" />
-          Barcelona, Spain
-        </Typography>
+        <Typography variant="small">{status}</Typography>
       </CardFooter>
     </Card>
   );

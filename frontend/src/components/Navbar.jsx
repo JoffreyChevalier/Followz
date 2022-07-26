@@ -11,7 +11,7 @@ function Navbar({ path }) {
   const handleOpen = () => setOpen(!open);
 
   return (
-    <div className="flex flex-col justify-between w-16 h-screen bg-white border-r border-grey-300">
+    <div className="fixed left-0 top-0 flex flex-col justify-between w-16 h-screen bg-white border-r border-grey-300">
       <div>
         <div className="inline-flex items-center justify-center w-16 h-16">
           <img src={avatar} alt="Avatar" className="w-12 h-12" />
@@ -111,8 +111,7 @@ function Navbar({ path }) {
           </nav>
         </div>
       </div>
-
-      <div className="sticky inset-x-0 bottom-0 p-2 bg-white border-t border-grey-300">
+      <div className="flex items-center h-10 bg-white border-t border-grey-300">
         <LogoutModal onClick={handleOpen} open={open} handleOpen={handleOpen} />
       </div>
     </div>

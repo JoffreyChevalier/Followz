@@ -23,3 +23,7 @@ export const fetchMe = async (data) => {
 export const createUser = async (data) => {
   return (await axios.post(`${API_URL}/users`, data)).data;
 };
+
+export const fecthApplications = async (authorId) => {
+  return (await axios.get(`${API_URL}/applications/${authorId}`)).data;
+};
