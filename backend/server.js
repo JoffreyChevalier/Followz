@@ -49,21 +49,25 @@ app.get("/me", async (req, res) => {
 
 // eslint-disable-next-line
 app.post("/login", async (req, res) => {
-  const user = await prisma.User.findUnique({
-    where: { nickname: req.body.nickname },
-  });
+  try {
+    const user = await prisma.User.findUnique({
+      where: { nickname: req.body.nickname },
+    });
 
-  if (!user) {
-    return res.sendStatus(401);
+    if (!user) {
+      return res.sendStatus(401);
+    }
+
+    if (await argon2.verify(user.password, req.body.password)) {
+      delete user.password;
+      req.session.user = user;
+      return res.send(user);
+    }
+
+    res.sendStatus(401);
+  } catch (err) {
+    res.sendStatus(500);
   }
-
-  if (await argon2.verify(user.password, req.body.password)) {
-    delete user.password;
-    req.session.user = user;
-    return res.send(user);
-  }
-
-  res.sendStatus(401);
 });
 
 app.delete("/logout", async (req, res) => {
