@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import avatar from "@assets/avatar.png";
-import LogoutModal from "./LogoutModal";
+import LogoutModal from "@components/LogoutModal";
+import AddApplicationsForm from "@components/AddApplicationsForm";
 
 // eslint-disable-next-line
 function Navbar({ path }) {
@@ -11,14 +12,14 @@ function Navbar({ path }) {
   const handleOpen = () => setOpen(!open);
 
   return (
-    <div className="fixed left-0 top-0 flex flex-col justify-between w-16 h-screen bg-white border-r border-grey-300">
+    <div className="fixed left-0 top-0 flex flex-col justify-between items-center w-16 h-screen bg-white border-r border-grey-300 z-50">
       <div>
         <div className="inline-flex items-center justify-center w-16 h-16">
           <img src={avatar} alt="Avatar" className="w-12 h-12" />
         </div>
 
         <div>
-          <nav className="flex flex-col p-2">
+          <nav className="flex flex-col justify-center p-2">
             <ul className="pt-4 space-y-1 border-t border-grey-300">
               <li>
                 <Link
@@ -40,10 +41,11 @@ function Navbar({ path }) {
                     <path d="M19 5v14H5V5h14m1.1-2H3.9c-.5 0-.9.4-.9.9v16.2c0 .4.4.9.9.9h16.2c.4 0 .9-.5.9-.9V3.9c0-.5-.5-.9-.9-.9zM11 7h6v2h-6V7zm0 4h6v2h-6v-2zm0 4h6v2h-6zM7 7h2v2H7zm0 4h2v2H7zm0 4h2v2H7z" />
                   </svg>
 
-                  <span className="absolute text-xs font-medium text-white bg-grey-900 left-full ml-4 px-2 py-1.5 top-1/2 -translate-y-1/2 rounded opacity-0 group-hover:opacity-100">
-                    Candidatures
+                  <span className="absolute text-xs font-medium text-white bg-grey-900 left-full px-2 py-1.5 top-1/2 -translate-y-1/2 rounded opacity-0 hover:hidden group-hover:opacity-100">
+                    Candidatures en cours
                   </span>
                 </Link>
+                {path === "/candidatures" && <AddApplicationsForm />}
               </li>
 
               <li>
@@ -70,7 +72,7 @@ function Navbar({ path }) {
                     </g>
                   </svg>
 
-                  <span className="absolute text-xs font-medium text-white bg-grey-900 left-full ml-4 px-2 py-1.5 top-1/2 -translate-y-1/2 rounded opacity-0 group-hover:opacity-100">
+                  <span className="absolute text-xs font-medium text-white bg-grey-900 left-full ml-4 px-2 py-1.5 top-1/2 -translate-y-1/2 rounded opacity-0 hover:hidden group-hover:opacity-100">
                     Archives
                   </span>
                 </Link>
@@ -102,7 +104,7 @@ function Navbar({ path }) {
                     </g>
                   </svg>
 
-                  <span className="absolute text-xs font-medium text-white bg-grey-900 left-full ml-4 px-2 py-1.5 top-1/2 -translate-y-1/2 rounded opacity-0 group-hover:opacity-100">
+                  <span className="absolute text-xs font-medium text-white bg-grey-900 left-full ml-4 px-2 py-1.5 top-1/2 -translate-y-1/2 rounded opacity-0 hover:hidden group-hover:opacity-100">
                     Paramètres
                   </span>
                 </Link>

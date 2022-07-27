@@ -21,8 +21,9 @@ model Applications {
   updatedAt DateTime @updatedAt
   jobTitle  String   @db.VarChar(255)
   company   String   @db.VarChar(255)
+  techno    String   @db.VarChar(255)
   url       String   @db.VarChar(400)
-  status    String   @db.VarChar(255)
+  status    String   @default("CV envoyé") @db.VarChar(255)
   archived  Boolean  @default(false)
   author    User?    @relation(fields: [authorId], references: [id])
   authorId  Int?

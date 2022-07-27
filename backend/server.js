@@ -140,6 +140,7 @@ app.get("/applications/:authorId", async (req, res) => {
         status: true,
         archived: true,
         author: false,
+        techno: true,
       },
     })
   );

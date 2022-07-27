@@ -7,12 +7,20 @@ import { UserContext } from "@contexts/UserContextProvider";
 import ApplicationCard from "@components/ApplicationCard";
 import Navbar from "@components/Navbar";
 
-import hellowork from "@assets/sitelogo/helloworklogo.jpeg";
-import indeed from "@assets/sitelogo/indeedlogo.jpeg";
-import linkedin from "@assets/sitelogo/linkedInlogo.jpeg";
-import monster from "@assets/sitelogo/monsterlogo.jpeg";
-import w2tj from "@assets/sitelogo/w2tjlogo.jpeg";
-import wom from "@assets/sitelogo/womlogo.jpeg";
+import helloworklogo from "@assets/sitelogo/helloworklogo.jpeg";
+import indeedlogo from "@assets/sitelogo/indeedlogo.jpeg";
+import linkedinlogo from "@assets/sitelogo/linkedInlogo.jpeg";
+import monsterlogo from "@assets/sitelogo/monsterlogo.jpeg";
+import w2tjlogo from "@assets/sitelogo/w2tjlogo.jpeg";
+import womlogo from "@assets/sitelogo/womlogo.jpeg";
+import othercompanylogo from "@assets/sitelogo/othercompanylogo.jpeg";
+import javalogo from "@assets/technologo/javalogo.jpeg";
+import javascriptlogo from "@assets/technologo/javascriptlogo.jpeg";
+import nodelogo from "@assets/technologo/nodejslogo.jpeg";
+import othertechnologo from "@assets/technologo/othertechnologo.jpeg";
+import phplogo from "@assets/technologo/phplogo.jpeg";
+import pythonlogo from "@assets/technologo/pythonlogo.jpeg";
+import rubylogo from "@assets/technologo/rubylogo.png";
 
 function ApplicationsPage() {
   const { user } = useContext(UserContext);
@@ -20,33 +28,42 @@ function ApplicationsPage() {
   const { pathname, ...others } = useLocation();
   const [applications, setApplications] = useState([]);
 
-  const applicationImageBindings = {
-    hellowork,
-    linkedin,
-    indeed,
-    monster,
-    welcometothejungle: w2tj,
-    wom,
+  const websiteImageBindingList = {
+    hellowork: helloworklogo,
+    linkedin: linkedinlogo,
+    indeed: indeedlogo,
+    monster: monsterlogo,
+    welcometothejungle: w2tjlogo,
+    wom: womlogo,
+  };
+
+  const technoImageBindingList = {
+    java: javalogo,
+    js: javascriptlogo,
+    node: nodelogo,
+    other: othertechnologo,
+    php: phplogo,
+    python: pythonlogo,
+    ruby: rubylogo,
   };
 
   useEffect(() => {
     (async () => {
       setApplications(await fecthApplications(user.id));
     })();
-  }, []);
+  }, [applications]);
 
-  const resolveApplicationImage = (imageUrl) => {
-    for (const pattern of Object.keys(applicationImageBindings)) {
+  const resolveApplicationImage = (bindingList, imageUrl) => {
+    for (const pattern of Object.keys(bindingList)) {
       if (imageUrl.includes(pattern)) {
-        return applicationImageBindings[pattern];
+        return bindingList[pattern];
       }
     }
 
-    return "https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Fwedevelopment.in%2Fwp-content%2Fuploads%2F2019%2F08%2Fno_image_png_934948.jpg&f=1&nofb=1";
+    return othercompanylogo;
   };
-
   return (
-    <div className="flex items-center justify-center ml-20 min-h-screen">
+    <div className="flex items-start justify-center ml-20 mr-22 min-h-screen">
       <div>
         <Navbar path={pathname} />
       </div>
@@ -54,10 +71,22 @@ function ApplicationsPage() {
         {applications.map((application, key) => (
           <ApplicationCard
             key={key}
-            imgSrc={resolveApplicationImage(application.url)}
+            websitelogo={resolveApplicationImage(
+              websiteImageBindingList,
+              application.url
+            )}
             title={application.jobTitle}
+            technologo={resolveApplicationImage(
+              technoImageBindingList,
+              application.techno
+            )}
             company={application.company}
             url={application.url}
+            linkText={
+              application.url === "wom"
+                ? "Bouche à oreille"
+                : "Lien vers l'annonce"
+            }
             status={application.status}
           />
         ))}

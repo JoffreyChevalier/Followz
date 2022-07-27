@@ -27,3 +27,7 @@ export const createUser = async (data) => {
 export const fecthApplications = async (authorId) => {
   return (await axios.get(`${API_URL}/applications/${authorId}`)).data;
 };
+
+export const createApplications = async (data, authorId) => {
+  return (await axios.post(`${API_URL}/applications/${authorId}`, data)).data;
+};

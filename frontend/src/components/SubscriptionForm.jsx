@@ -9,7 +9,7 @@ import {
 } from "@material-tailwind/react";
 
 // eslint-disable-next-line
-function SubscriptionModal({ open, handler, buttonType }) {
+function SubscriptionForm({ open, handler, buttonType }) {
   const navigate = useNavigate();
 
   return (
@@ -52,4 +52,4 @@ function SubscriptionModal({ open, handler, buttonType }) {
   );
 }
 
-export default SubscriptionModal;
+export default SubscriptionForm;
