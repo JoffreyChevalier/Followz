@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { Input, Alert } from "@material-tailwind/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";

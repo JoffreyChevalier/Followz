@@ -1,7 +1,7 @@
+/* eslint-disable import/no-unresolved */
 import { Controller, useForm } from "react-hook-form";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
-import { UserContext } from "@contexts/UserContextProvider";
 import { createApplications } from "@services/api";
 
 import {
@@ -15,7 +15,6 @@ import {
 } from "@material-tailwind/react";
 
 function AddApplicationsForm() {
-  const { user } = useContext(UserContext);
   const [open, setOpen] = useState(false);
 
   const jobTitleOptionList = ["Dev Fullstack", "Dev Frontend", "Dev Backend"];
@@ -30,7 +29,7 @@ function AddApplicationsForm() {
 
   const onSubmit = async (formData) => {
     try {
-      await createApplications(formData, user.id);
+      await createApplications(formData);
       handleOpen();
       reset();
     } catch {
@@ -40,17 +39,17 @@ function AddApplicationsForm() {
 
   return (
     <div>
-      <Button
-        variant="text"
+      <button
         type="button"
-        className="text-primary text-base group mt-2 px-5 py-4 text-[1.5rem]"
+        className="fixed bottom-2 right-2 sm:bottom-4 sm:right-4 z-50 text-white bg-primary text-base sm:font-bold
+         group mt-2 px-[.85rem] py-[.55rem] text-[1.5rem] rounded-full sm:scale-125 hover:scale-105"
         onClick={handleOpen}
       >
         +
-        <span className="absolute text-xs normal-case font-medium text-white bg-grey-900 left-full ml-4 px-2 py-1.5 top-[10.55rem] -translate-y-1/2 rounded opacity-0 hover:hidden group-hover:opacity-100">
+        <span className="fixed text-xs normal-case w-20 font-medium text-white bg-grey-900 px-2 py-1.5 bottom-9 right-2 -translate-y-1/2 rounded opacity-0 hover:hidden group-hover:opacity-100">
           Ajouter une candidature
         </span>
-      </Button>
+      </button>
       <Dialog
         dismissType={{ enabled: false }}
         open={open}

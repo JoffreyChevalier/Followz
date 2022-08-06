@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 
 import avatar from "@assets/avatar.png";
 import LogoutModal from "@components/LogoutModal";
-import AddApplicationsForm from "@components/AddApplicationsForm";
 
 // eslint-disable-next-line
 function Navbar({ path }) {
@@ -14,13 +13,13 @@ function Navbar({ path }) {
   return (
     <div className="fixed left-0 top-0 flex flex-col justify-between items-center w-16 h-screen bg-white border-r border-grey-300 z-50">
       <div>
-        <div className="inline-flex items-center justify-center w-16 h-16">
+        <div className="flex items-center justify-center w-16 h-16 m-1">
           <img src={avatar} alt="Avatar" className="w-12 h-12" />
         </div>
 
         <div>
           <nav className="flex flex-col justify-center p-2">
-            <ul className="pt-4 space-y-1 border-t border-grey-300">
+            <ul className="pt-3 space-y-1 border-t border-grey-300">
               <li>
                 <Link
                   to="/candidatures"
@@ -45,7 +44,6 @@ function Navbar({ path }) {
                     Candidatures en cours
                   </span>
                 </Link>
-                {path === "/candidatures" && <AddApplicationsForm />}
               </li>
 
               <li>

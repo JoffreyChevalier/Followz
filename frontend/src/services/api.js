@@ -24,10 +24,18 @@ export const createUser = async (data) => {
   return (await axios.post(`${API_URL}/users`, data)).data;
 };
 
-export const fecthApplications = async (authorId) => {
-  return (await axios.get(`${API_URL}/applications/${authorId}`)).data;
+export const fecthApplications = async () => {
+  return (await axios.get(`${API_URL}/applications`)).data;
 };
 
-export const createApplications = async (data, authorId) => {
-  return (await axios.post(`${API_URL}/applications/${authorId}`, data)).data;
+export const createApplications = async (data) => {
+  return (await axios.post(`${API_URL}/applications`, data)).data;
+};
+
+export const updateApplications = async (data) => {
+  return (await axios.put(`${API_URL}/applications`, data)).data;
+};
+
+export const deleteApplications = async (id) => {
+  return (await axios.delete(`${API_URL}/applications/${id}`)).data;
 };

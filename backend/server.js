@@ -109,27 +109,7 @@ app.post("/users", async (req, res) => {
 app.get("/applications", async (req, res) => {
   res.send(
     await prisma.Applications.findMany({
-      select: {
-        id: true,
-        createdAt: true,
-        updatedAt: true,
-        jobTitle: true,
-        company: true,
-        url: true,
-        status: true,
-        archived: true,
-        author: true,
-      },
-    })
-  );
-});
-
-app.get("/applications/:authorId", async (req, res) => {
-  const { authorId } = req.params;
-
-  res.send(
-    await prisma.Applications.findMany({
-      where: { authorId: Number(authorId) },
+      where: { authorId: Number(req.session.user.id) },
       select: {
         id: true,
         createdAt: false,
@@ -146,26 +126,50 @@ app.get("/applications/:authorId", async (req, res) => {
   );
 });
 
-app.post("/applications/:authorId", async (req, res) => {
-  const { authorId } = req.params;
+app.get("/applications/:id", async (req, res) => {
+  const id = Number(req.params.id);
+  res.send(
+    await prisma.Applications.findUnique({
+      where: {
+        id,
+        authorId: Number(req.session.user.id),
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        updatedAt: true,
+        jobTitle: true,
+        company: true,
+        url: true,
+        status: true,
+        archived: true,
+        author: true,
+      },
+    })
+  );
+});
 
+app.post("/applications", async (req, res) => {
   res.send(
     await prisma.Applications.create({
       data: {
         ...req.body,
-        authorId: Number(authorId),
+        authorId: Number(req.session.user.id),
       },
     })
   );
 });
 
 // eslint-disable-next-line
-app.put("/applications/:authorId", async (req, res) => {
+app.put("/applications", async (req, res) => {
   const application = await prisma.Applications.findUnique({
     where: { id: Number(req.body.id) },
   });
 
-  if (!application) {
+  if (
+    !application
+    // || application.authorId !== Number(req.session.user.id)
+  ) {
     return res.sendStatus(404);
   }
 
@@ -185,12 +189,14 @@ app.put("/applications/:authorId", async (req, res) => {
   );
 });
 
-app.delete(`/applications/:authorId`, async (req, res) => {
-  const { id } = req.body;
+app.delete(`/applications/:id`, async (req, res) => {
+  const id = Number(req.params.id);
+
   res.send(
-    await prisma.Applications.delete({
+    await prisma.Applications.deleteMany({
       where: {
-        id: Number(id),
+        id,
+        authorId: Number(req.session.user.id),
       },
     })
   );

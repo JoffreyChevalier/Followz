@@ -1,9 +1,13 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-import { fecthApplications } from "@services/api";
-import { UserContext } from "@contexts/UserContextProvider";
+import {
+  fecthApplications,
+  deleteApplications,
+  updateApplications,
+} from "@services/api";
 
+import ConfirmationModal from "@components/ConfirmationModal";
 import ApplicationCard from "@components/ApplicationCard";
 import Navbar from "@components/Navbar";
 
@@ -21,12 +25,13 @@ import othertechnologo from "@assets/technologo/othertechnologo.jpeg";
 import phplogo from "@assets/technologo/phplogo.jpeg";
 import pythonlogo from "@assets/technologo/pythonlogo.jpeg";
 import rubylogo from "@assets/technologo/rubylogo.png";
+import AddApplicationsForm from "@components/AddApplicationsForm";
 
 function ApplicationsPage() {
-  const { user } = useContext(UserContext);
-  // eslint-disable-next-line
-  const { pathname, ...others } = useLocation();
+  const { pathname } = useLocation();
   const [applications, setApplications] = useState([]);
+  const [applicationToDelete, setApplicationToDelete] = useState();
+  const [applicationToArchived, setApplicationToArchived] = useState();
 
   const websiteImageBindingList = {
     hellowork: helloworklogo,
@@ -47,51 +52,125 @@ function ApplicationsPage() {
     ruby: rubylogo,
   };
 
+  const menuItemList = [
+    "CV envoyé",
+    "Entretien décroché",
+    "Attente de réponse",
+    "Archivé",
+  ];
+
+  const refreshApplications = async () => {
+    setApplications(await fecthApplications());
+  };
+
   useEffect(() => {
-    (async () => {
-      setApplications(await fecthApplications(user.id));
-    })();
+    refreshApplications();
   }, [applications]);
 
   const resolveApplicationImage = (bindingList, imageUrl) => {
     for (const pattern of Object.keys(bindingList)) {
-      if (imageUrl.includes(pattern)) {
+      if (imageUrl?.includes(pattern)) {
         return bindingList[pattern];
       }
     }
-
     return othercompanylogo;
   };
+
+  const onUpdateAppliccation = async (applicationId, statusToUpdate) => {
+    if (statusToUpdate === "Archivé") {
+      setApplicationToArchived({
+        id: applicationId,
+        status: statusToUpdate,
+        archived: true,
+      });
+    } else {
+      try {
+        await updateApplications({ id: applicationId, status: statusToUpdate });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  };
+
+  const onArchivedApplication = async () => {
+    try {
+      await updateApplications(applicationToArchived);
+      refreshApplications();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setApplicationToArchived(null);
+    }
+  };
+
+  const onDeleteApplication = async () => {
+    try {
+      await deleteApplications(applicationToDelete.id);
+      refreshApplications();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setApplicationToDelete(null);
+    }
+  };
   return (
-    <div className="flex items-start justify-center ml-20 mr-22 min-h-screen">
-      <div>
+    <>
+      <ConfirmationModal
+        open={!!applicationToDelete}
+        onConfirm={onDeleteApplication}
+        onCancel={() => setApplicationToDelete(null)}
+      >
+        Voulez-vous vraiment supprimer la candidature de{" "}
+        {applicationToDelete?.company} ?
+      </ConfirmationModal>
+
+      <ConfirmationModal
+        open={!!applicationToArchived}
+        onConfirm={onArchivedApplication}
+        onCancel={() => setApplicationToArchived(null)}
+      >
+        Voulez-vous vraiment archivé cette candidature ?
+      </ConfirmationModal>
+
+      <div className="flex items-start justify-center ml-20 mr-22 min-h-screen">
         <Navbar path={pathname} />
+        <AddApplicationsForm />
+
+        <div className="flex flex-wrap justify-center gap-10 my-5 mr-5">
+          {applications.map(
+            (application) =>
+              application.archived === false && (
+                <ApplicationCard
+                  key={application.id}
+                  websitelogo={resolveApplicationImage(
+                    websiteImageBindingList,
+                    application.url
+                  )}
+                  title={application.jobTitle}
+                  technologo={resolveApplicationImage(
+                    technoImageBindingList,
+                    application.techno
+                  )}
+                  company={application.company}
+                  url={application.url}
+                  linkText={
+                    application.url === "wom"
+                      ? "Bouche à oreille"
+                      : "Lien vers l'annonce"
+                  }
+                  status={application.status}
+                  cardId={application.id}
+                  onDelete={() => setApplicationToDelete(application)}
+                  menuItemList={menuItemList}
+                  onUpdate={(newStatusValue) =>
+                    onUpdateAppliccation(application.id, newStatusValue)
+                  }
+                />
+              )
+          )}
+        </div>
       </div>
-      <div className="flex flex-wrap justify-center gap-10 my-5 mr-5">
-        {applications.map((application, key) => (
-          <ApplicationCard
-            key={key}
-            websitelogo={resolveApplicationImage(
-              websiteImageBindingList,
-              application.url
-            )}
-            title={application.jobTitle}
-            technologo={resolveApplicationImage(
-              technoImageBindingList,
-              application.techno
-            )}
-            company={application.company}
-            url={application.url}
-            linkText={
-              application.url === "wom"
-                ? "Bouche à oreille"
-                : "Lien vers l'annonce"
-            }
-            status={application.status}
-          />
-        ))}
-      </div>
-    </div>
+    </>
   );
 }
 

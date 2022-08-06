@@ -50,12 +50,12 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:5000/applications/8
+PUT http://localhost:5000/applications
 Content-Type: application/json
 
 {
-    "id": 4,
-    "status": "pétasse",
+    "id": 23,
+    "status" : "Archivé",
     "archived": true
 }
 
