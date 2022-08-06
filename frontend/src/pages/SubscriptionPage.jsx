@@ -1,3 +1,4 @@
+/* eslint-disable import/no-unresolved */
 import { Input, Alert } from "@material-tailwind/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -5,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { createUser } from "@services/api";
 
 import logo from "@assets/logo.png";
-import SubscriptionModal from "@components/SubscriptionModal";
+import SubscriptionForm from "@components/SubscriptionForm";
 
 function SubscriptionPage() {
   const [open, setOpen] = useState(false);
@@ -96,7 +97,7 @@ function SubscriptionPage() {
                     {...register("passwordCheck")}
                   />
                 </div>
-                <SubscriptionModal buttonType="submit" open={open} />
+                <SubscriptionForm buttonType="submit" open={open} />
               </form>
             </div>
           </div>

@@ -9,21 +9,19 @@ datasource db {
 
 model User {
   id           Int            @id @default(autoincrement())
-  createdAt    DateTime       @default(now())
   nickname     String         @unique
   password     String         @db.VarChar(255)
   applications Applications[]
 }
 
 model Applications {
-  id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  jobTitle  String   @db.VarChar(255)
-  company   String   @db.VarChar(255)
-  url       String   @db.VarChar(400)
-  status    String   @db.VarChar(255)
-  archived  Boolean  @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  id       Int     @id @default(autoincrement())
+  jobTitle String  @db.VarChar(255)
+  company  String  @db.VarChar(255)
+  techno   String  @db.VarChar(255)
+  url      String  @db.VarChar(400)
+  status   String  @default("CV envoyé") @db.VarChar(255)
+  archived Boolean @default(false)
+  author   User?   @relation(fields: [authorId], references: [id])
+  authorId Int?
 }

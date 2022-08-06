@@ -27,9 +27,13 @@
         "message": "You can only call the error() and warn() functions from the console object"
       }
     ],
+    "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-one-expression-per-line": "off",
     "react/no-unescaped-entities": "off",
+    "jsx-a11y/click-events-have-key-events": "off",
+    "jsx-a11y/no-static-element-interactions": "off",
+    "jsx-a11y/aria-role": "off",
     "jsx-a11y/label-has-associated-control": [
       "error",
       {
